@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Buttons</title>
+  <style type="text/css">
+    h1 {
+      font-size: 5em;
+    }
+    body, button {
+      font-size: 1.1em;
+      font-family: Arial;
+    }
+
+    .center {
+      margin: auto;
+      width: 50%;
+      padding: 30px;
+    }
+
+    button {
+      background: url('star-notdone.png') no-repeat;
+      cursor: pointer;
+      border: none;
+      height: 64px;
+      width: 64px;
+    }
+
+    [data-done="true"] {
+      background: url('star-done.png') no-repeat;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="center">
+    <h1 id="count">0</h1>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+    <button></button>
+
+    <div id="counter"></div>
+    </div>
+
+    <script type="text/javascript">
+      (function () {
+        const onClick =  async function (event) {
+            event.srcElement.dataset.done = !(event.srcElement.dataset.done === "true");
+            updateCount()
+            playSound()
+        }
+
+        const updateCount = function () {
+          const count = document.querySelectorAll('button[data-done="true"]').length
+          document.getElementById("count").innerHTML = count;
+        }
+
+        const playSound = function () {
+          var audio = new Audio('coin-2-47744.mp3');
+          audio.play();
+        }
+
+        document.querySelectorAll('button').forEach((element) => element.addEventListener('click', onClick));
+      })();
+    </script>
+  </body>
+</html>
