@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Buttons</title>
+  <title>Getting Things Done!</title>
   <style type="text/css">
     h1 {
       font-size: 5em;
@@ -29,6 +29,10 @@
 
     [data-done="true"] {
       background: url('star-done.png') no-repeat;
+    }
+
+    .shine {
+      background: url('star-shine.png') no-repeat;
     }
   </style>
 </head>
@@ -142,20 +146,81 @@
 
     <script type="text/javascript">
       (function () {
-        const onClick =  async function (event) {
-            event.srcElement.dataset.done = !(event.srcElement.dataset.done === "true");
-            updateCount()
-            playSound()
+        const NEXT_10_DONE_SOUND = "audio/power_up_grab-88510.mp3";
+        const CELEBRATION_COUNT = 10;
+        const DONE_SOUNDS = [
+          "audio/item-pick-up-38258.mp3",
+          "audio/coin-2-47744.mp3",
+          "audio/notification-140376.mp3",
+          "audio/fanfare-46385.mp3",
+          "audio/3-up-2-89189.mp3",
+          "audio/item-39146.mp3"
+        ];
+
+        const getDoneButtons = function () {
+          return document.querySelectorAll('button[data-done="true"]')
         }
 
-        const updateCount = function () {
-          const count = document.querySelectorAll('button[data-done="true"]').length
+        const toggleDone  = function (button) {
+          button.dataset.done = !(button.dataset.done === "true");
+        }
+
+        const isIncrement = function (event) {
+          return event.srcElement.dataset.done === "true";
+        }
+
+        const updateCountDisplay = function (count) {
           document.getElementById("count").innerHTML = count;
         }
 
-        const playSound = function () {
-          var audio = new Audio('coin-2-47744.mp3');
-          audio.play();
+        const getCount = function () {
+          return getDoneButtons().length
+        }
+
+        const playSound = function (count) {
+          new Audio(selectSoundFile(count)).play();
+        }
+
+        const selectSoundFile = function (count) {
+          return isTimeToCelebrate(count) ? NEXT_10_DONE_SOUND : selectRandomItem(DONE_SOUNDS);
+        }
+
+        const selectRandomItem = function (items) {
+          return items[Math.floor(Math.random() * items.length)];
+        }
+
+        // every 10 done buttons
+        const isTimeToCelebrate = function (count) {
+          return count % CELEBRATION_COUNT === 0
+        }
+
+        // the last 10 done buttons according to DOM order
+        const getButtonsToShine = function () {
+          return Array.from(getDoneButtons()).slice(CELEBRATION_COUNT * -1);
+        }
+
+        // make the buttons light up
+        const celebrate = async function (count) {
+          const LAG_TIME = 50;
+          const SHINE_TIME = 400
+
+          const buttons = getButtonsToShine()
+
+          buttons.forEach((item, i) => {
+            setTimeout(() => { item.setAttribute("class", "shine"); }, i * LAG_TIME)
+            setTimeout(() => { item.setAttribute("class", ""); }, (i * LAG_TIME) + (buttons.length * LAG_TIME))
+
+          });
+        }
+
+        const onClick =  async function (event) {
+            toggleDone(event.srcElement);
+            const count = getCount();
+            updateCountDisplay(count);
+            if (isIncrement(event)) {
+              playSound(count)
+              isTimeToCelebrate(count) && celebrate(count);
+            }
         }
 
         document.querySelectorAll('button').forEach((element) => element.addEventListener('click', onClick));
