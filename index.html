@@ -3,6 +3,7 @@
 
 <head>
   <title>Getting Things Done!</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <style type="text/css">
     h1 {
       font-size: 5em;
@@ -40,15 +41,15 @@
 <body>
   <div class="center">
     <h1 id="count">0</h1>
-        <button></button>
-        <button></button>
-        <button></button>
-        <button></button>
-        <button></button>
-        <button></button>
-        <button></button>
-        <button></button>
-        <button></button>
+        <button data-done="true"></button>
+        <button data-done="true"></button>
+        <button data-done="true"></button>
+        <button data-done="true"></button>
+        <button data-done="true"></button>
+        <button data-done="true"></button>
+        <button data-done="true"></button>
+        <button data-done="true"></button>
+        <button data-done="true"></button>
         <button></button>
         <button></button>
         <button></button>
@@ -145,7 +146,7 @@
     </div>
 
     <script type="text/javascript">
-      (function () {
+      // (function () {
         const NEXT_10_DONE_SOUND = "audio/power_up_grab-88510.mp3";
         const CELEBRATION_COUNT = 10;
         const DONE_SOUNDS = [
@@ -213,8 +214,16 @@
           buttons.forEach((item, i) => {
             setTimeout(() => { item.setAttribute("class", "shine"); }, i * LAG_TIME)
             setTimeout(() => { item.setAttribute("class", ""); }, (i * LAG_TIME) + (buttons.length * LAG_TIME))
-
           });
+
+          confetti({
+            particleCount: 100,
+            startVelocity: 30,
+            spread: 360,
+            origin: {
+             x: 0.5,
+             y: 0.3
+          }});
         }
 
         const onClick =  async function (event) {
@@ -228,7 +237,7 @@
         }
 
         document.querySelectorAll("button").forEach((element) => element.addEventListener("click", onClick));
-      })();
+      // })();
     </script>
   </body>
 </html>
