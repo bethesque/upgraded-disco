@@ -157,10 +157,10 @@
     </div>
 
     <script type="text/javascript">
-      // (function () {
-        const NEXT_10_DONE_SOUND = "audio/power_up_grab-88510.mp3";
+      (function () {
         const CELEBRATION_COUNT = 10;
-        const DONE_SOUNDS = [
+        const CELEBRATION_SOUND_FILE = "audio/power_up_grab-88510.mp3";
+        const DONE_SOUND_FILES = [
           "audio/item-pick-up-38258.mp3",
           "audio/coin-2-47744.mp3",
           "audio/notification-140376.mp3",
@@ -169,6 +169,8 @@
           "audio/item-39146.mp3"
         ];
 
+        const DONE_AUDIOS = DONE_SOUND_FILES.map((file) => new Audio(file));
+        const CELEBRATION_AUDIO = new Audio(CELEBRATION_SOUND_FILE);
 
         const getDoneButtons = function () {
           return document.querySelectorAll('button[data-done="true"]')
@@ -192,11 +194,11 @@
         }
 
         const playSound = function (count) {
-          new Audio(selectSoundFile(count)).play();
+          selectSoundAudio(count).play();
         }
 
-        const selectSoundFile = function (count) {
-          return isTimeToCelebrate(count) ? NEXT_10_DONE_SOUND : selectRandomItem(DONE_SOUNDS);
+        const selectSoundAudio = function (count) {
+          return isTimeToCelebrate(count) ? CELEBRATION_AUDIO : selectRandomItem(DONE_AUDIOS);
         }
 
         const selectRandomItem = function (items) {
@@ -248,7 +250,7 @@
         }
 
         document.querySelectorAll("button").forEach((element) => element.addEventListener("click", onClick));
-      // })();
+      })();
     </script>
   </body>
 </html>
