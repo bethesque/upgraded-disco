@@ -42,7 +42,7 @@
       left: 25%;
       top: 300px;
       width: 50%;
-      background-color: rgba(255,255,255,0.5);
+      background-color: rgba(255,255,255,0.7);
     }
   </style>
 </head>
@@ -51,17 +51,6 @@
   <div class="center">
     <img src="images/Ancient_Guardian.webp" class="enderImage" style="display:none"/>
     <h1 id="count">0</h1>
-    <!--
-        <button data-done="true"></button>
-        <button data-done="true"></button>
-        <button data-done="true"></button>
-        <button data-done="true"></button>
-        <button data-done="true"></button>
-        <button data-done="true"></button>
-        <button data-done="true"></button>
-        <button data-done="true"></button>
-        <button data-done="true"></button>
-    -->
         <button></button>
         <button></button>
         <button></button>
@@ -183,13 +172,21 @@
         const DONE_AUDIOS = DONE_SOUND_FILES.map((file) => new Audio(file));
         const CELEBRATION_AUDIO = new Audio(CELEBRATION_SOUND_FILE);
 
+        const LAG_TIME = 50;
+        const SHINE_TIME = 400;
+
         const getDoneButtons = function () {
           return document.querySelectorAll('button[data-done="true"]')
         }
 
         // the last 10 done buttons according to the order they were done in
-        const getButtonsToShine = function () {
-          return Array.from(getDoneButtons()).sort(compareButtonDoneAt).slice(CELEBRATION_COUNT * -1);
+        const getButtonsToShine = function (count) {
+          const orderedDoneButtons = Array.from(getDoneButtons()).sort(compareButtonDoneAt);
+          if (isFinished(count)) {
+            return orderedDoneButtons;
+          } else {
+            return orderedDoneButtons.slice(CELEBRATION_COUNT * -1);
+          }
         }
 
         const getAllButtons = function () {
@@ -218,7 +215,7 @@
         }
 
         const selectSoundAudio = function (count) {
-          return isTimeToCelebrate(count) ? CELEBRATION_AUDIO : selectRandomItem(DONE_AUDIOS);
+          return (isTimeToCelebrateSmallWin(count) || isFinished(count)) ? CELEBRATION_AUDIO : selectRandomItem(DONE_AUDIOS);
         }
 
         const selectRandomItem = function (items) {
@@ -226,8 +223,8 @@
         }
 
         // every 10 done buttons
-        const isTimeToCelebrate = function (count) {
-          return count % CELEBRATION_COUNT === 0
+        const isTimeToCelebrateSmallWin = function (count) {
+          return (count % CELEBRATION_COUNT === 0) && !isFinished(count);
         }
 
         const isFinished = function (count) {
@@ -237,11 +234,8 @@
         const compareButtonDoneAt = (a, b) => { return a.dataset.doneAt - b.dataset.doneAt; }
 
         // make the buttons light up
-        const celebrate = async function (count) {
-          const LAG_TIME = 50;
-          const SHINE_TIME = 400
-
-          const buttons = getButtonsToShine()
+        const celebrateSmallWin = async function (count) {
+          const buttons = getButtonsToShine(count)
 
           buttons.forEach((item, i) => {
             setTimeout(() => { item.setAttribute("class", "shine"); }, i * LAG_TIME)
@@ -258,6 +252,25 @@
           }});
         }
 
+        const celebrateFinishing = async function (count) {
+          const buttons = getButtonsToShine(count)
+
+          buttons.forEach((item, i) => {
+            setTimeout(() => { item.setAttribute("class", "shine"); }, i * 25)
+          });
+
+          confetti({
+            particleCount: 500,
+            startVelocity: 50,
+            spread: 360,
+            origin: {
+             x: 0.5,
+             y: 0.3
+          }});
+
+          displayEnderImage();
+        }
+
         const displayEnderImage = function () {
           document.querySelector(".enderImage").setAttribute("style", "");
         }
@@ -268,26 +281,33 @@
             updateCountDisplay(count);
             if (isIncrement(event)) {
               playSound(count)
-              isTimeToCelebrate(count) && celebrate(count);
+              isTimeToCelebrateSmallWin(count) && celebrateSmallWin(count);
             }
 
             if (isFinished(count)) {
-              displayEnderImage();
+              celebrateFinishing(count);
             }
         }
 
-        //initialise page
-        document.querySelectorAll("button").forEach((element) => element.addEventListener("click", onClick));
-
-        const done = new URLSearchParams(location.search).get("done");
-
-        if(done) {
+        const initializeDoneButtons = function (done) {
           Array.from(getAllButtons()).slice(0, done).forEach((item, i) => {
             toggleDone(item);
           });
 
           updateCountDisplay(getCount());
         }
+
+        const initializePage = function () {
+          // add click handler
+          document.querySelectorAll("button").forEach((element) => element.addEventListener("click", onClick));
+
+          const done = new URLSearchParams(location.search).get("done");
+          if(done) {
+            initializeDoneButtons(done)
+          }
+        }
+
+        initializePage();
       })();
     </script>
   </body>
