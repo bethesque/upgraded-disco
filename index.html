@@ -187,7 +187,7 @@
 
     <script type="text/javascript">
       (function () {
-        const CELEBRATION_COUNT = 10;
+        const CELEBRATION_COUNT = 5;
         const CELEBRATION_SOUND_FILE = "audio/power_up_grab-88510.mp3";
         const DONE_SOUND_FILES = [
           "audio/item-pick-up-38258.mp3",
@@ -199,11 +199,9 @@
         ];
 
         const TOTAL_BUTTONS = document.querySelectorAll('button').length;
-        const DONE_AUDIOS = DONE_SOUND_FILES.map((file) => new Audio(file));
-        const CELEBRATION_AUDIO = new Audio(CELEBRATION_SOUND_FILE);
 
-        const LAG_TIME = 50;
-        const SHINE_TIME = 400;
+        const LAG_TIME = 100;
+        const SHINE_TIME = 700;
 
         const getDoneButtons = function () {
           return document.querySelectorAll('button[data-done="true"]')
@@ -241,11 +239,11 @@
         }
 
         const playSound = function (count) {
-          selectSoundAudio(count).play();
+          new Audio(selectSoundAudioFile(count)).play();
         }
 
-        const selectSoundAudio = function (count) {
-          return (isTimeToCelebrateSmallWin(count) || isFinished(count)) ? CELEBRATION_AUDIO : selectRandomItem(DONE_AUDIOS);
+        const selectSoundAudioFile = function (count) {
+          return (isTimeToCelebrateSmallWin(count) || isFinished(count)) ? CELEBRATION_SOUND_FILE : selectRandomItem(DONE_SOUND_FILES);
         }
 
         const selectRandomItem = function (items) {
@@ -270,6 +268,7 @@
           buttons.forEach((item, i) => {
             setTimeout(() => { item.setAttribute("class", "shine"); }, i * LAG_TIME)
             setTimeout(() => { item.setAttribute("class", ""); }, (i * LAG_TIME) + (buttons.length * LAG_TIME))
+            setTimeout(() => { item.setAttribute("class", "shine"); }, (i * LAG_TIME) + (buttons.length * LAG_TIME * 2))
           });
 
           confetti({
