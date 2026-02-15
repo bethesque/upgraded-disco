@@ -4,11 +4,13 @@
 <head>
   <title>Getting Things Done!</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style type="text/css">
     h1 {
       font-size: 5em;
       text-align: center;
     }
+
     body, button {
       font-size: 1.1em;
       font-family: Arial;
@@ -16,24 +18,31 @@
 
     .center {
       margin: auto;
-      padding: 30px;
+      padding: 5vw;
     }
 
     button {
-      background: url('star-notdone.png') no-repeat;
+      background-image: url('star-notdone.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
       cursor: pointer;
       border: none;
-      height: 64px;
-      width: 64px;
-      margin: 10px;
+      background-color: inherit;
     }
 
     [data-done="true"] {
-      background: url('star-done.png') no-repeat;
+      background-image: url('star-done.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
     }
 
     .shine {
-      background: url('star-shine.png') no-repeat;
+      background-image: url('star-shine.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
     }
 
     .enderImage {
@@ -44,15 +53,25 @@
       width: 50%;
       background-color: rgba(255,255,255,0.7);
     }
-  </style>
-  <style>
-  @media only screen and (max-width: 800px) {
-    button {
-      height: 128px;
-      width: 128px;
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr); ;
+      gap: 5vw;
     }
-  }
-</style>
+
+    .button-grid button {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1 / 1;
+    }
+
+    @media only screen and (max-width: 640px) {
+      .button-grid {
+        grid-template-columns: repeat(5, 1fr); ;
+      }
+    }
+  </style>
 </head>
 
 
@@ -60,6 +79,7 @@
   <div class="center">
     <img src="images/Ancient_Guardian.webp" class="enderImage" style="display:none"/>
     <h1 id="count">0</h1>
+    <div class="button-grid">
         <button></button>
         <button></button>
         <button></button>
@@ -160,6 +180,7 @@
         <button></button>
         <button></button>
         <button></button>
+    </div>
 
     <div id="counter"></div>
     </div>
